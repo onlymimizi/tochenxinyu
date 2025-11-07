@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>立冬小礼物 🍂</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="snow-container">
+            <div class="snowflakes" aria-hidden="true">
+                <!-- 雪花将通过JavaScript动态生成 -->
+            </div>
+        </div>
+
+        <header class="header">
+            <h1 class="title">立冬快乐 🍂</h1>
+            <p class="subtitle">一份温暖的冬日小礼物</p>
+        </header>
+
+        <main class="content">
+            <div class="gift-container">
+                <div class="gift-box" id="giftBox">
+                    <div class="gift-lid"></div>
+                    <div class="gift-body">
+                        <div class="gift-ribbon"></div>
+                    </div>
+                </div>
+                <div class="message" id="message">
+                    <p class="greeting">温暖过冬，幸福满满</p>
+                    <p class="wishes">愿你的冬日充满阳光和温暖❤️</p>
+                    <div class="heart-container">
+                        <div class="heart"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interaction-hint">
+                <p>点击礼物盒打开惊喜 ✨</p>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="music-control" id="musicControl">
+                <span class="music-icon">🎵</span>
+                <span class="music-text">音乐</span>
+            </div>
+            <p class="from">来自朋友的冬日祝福</p>
+        </footer>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-creativeminds.mp3" type="audio/mpeg">
+        <source src="https://www.bensound.com/bensound-music/bensound-creativeminds.ogg" type="audio/ogg">
+        您的浏览器不支持音频元素。
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
