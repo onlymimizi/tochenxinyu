@@ -6,10 +6,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const bgMusic = document.getElementById('bgMusic');
     const snowflakesContainer = document.querySelector('.snowflakes');
     const container = document.querySelector('.container');
+    const themeToggle = document.getElementById('themeToggle');
+    const shareBtn = document.getElementById('shareBtn');
+    const confettiBtn = document.getElementById('confettiBtn');
+    const messageBtn = document.getElementById('messageBtn');
+    const customModal = document.getElementById('customModal');
+    const sendMessageBtn = document.getElementById('sendMessage');
+    const closeModalBtn = document.getElementById('closeModal');
+    const messageInput = document.getElementById('messageInput');
     
-    // 音乐控制状态
+    // 状态变量
     let musicPlaying = false;
-    
+    let currentTheme = 'default';
+    let snowEnabled = true;
+    let particlesEnabled = true;
+    let giftOpened = false;
+
     // 创建雪花效果
     function createSnowflakes() {
         const snowflakeSymbols = ['❄', '❅', '❆'];
@@ -21,6 +33,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function createSingleSnowflake() {
+        if (!snowEnabled) return;
+        
         const snowflake = document.createElement('div');
         snowflake.classList.add('snowflake');
         
@@ -71,8 +85,47 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
     
+    // 创建彩花效果
+    function createConfetti() {
+        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+        const confettiCount = 100;
+        
+        for (let i = 0; i < confettiCount; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            
+            // 随机颜色
+            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+            
+            // 随机位置
+            confetti.style.left = `${Math.random() * 100}%`;
+            
+            // 随机大小
+            const size = Math.random() * 10 + 5;
+            confetti.style.width = `${size}px`;
+            confetti.style.height = `${size}px`;
+            
+            // 随机动画持续时间
+            const duration = Math.random() * 3 + 2;
+            confetti.style.animationDuration = `${duration}s`;
+            
+            // 随机延迟
+            confetti.style.animationDelay = `${Math.random() * 2}s`;
+            
+            document.body.appendChild(confetti);
+            
+            // 动画结束后移除彩花
+            setTimeout(() => {
+                confetti.remove();
+            }, (duration + parseFloat(confetti.style.animationDelay)) * 1000);
+        }
+    }
+    
     // 打开礼物盒
     function openGiftBox() {
+        if (giftOpened) return;
+        giftOpened = true;
+        
         // 添加打开类
         giftBox.classList.add('open');
         
@@ -85,6 +138,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(() => createFloatingHeart(), i * 300);
             }
             
+            // 创建彩花效果
+            createConfetti();
+            
             // 持续创建爱心
             const heartInterval = setInterval(() => {
                 createFloatingHeart();
@@ -95,9 +151,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearInterval(heartInterval);
             }, 10000);
         }, 500);
-        
-        // 移除点击事件
-        giftBox.removeEventListener('click', openGiftBox);
         
         // 隐藏交互提示
         const hint = document.querySelector('.interaction-hint');
@@ -127,16 +180,180 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // 切换主题
+    function toggleTheme() {
+        const themes = ['default', 'dark-theme', 'warm-theme'];
+        const currentIndex = themes.indexOf(currentTheme);
+        const nextIndex = (currentIndex + 1) % themes.length;
+        
+        // 移除当前主题
+        document.body.classList.remove(currentTheme);
+        
+        // 添加新主题
+        currentTheme = themes[nextIndex];
+        document.body.classList.add(currentTheme);
+        
+        // 更新主题图标
+        const themeIcon = themeToggle.querySelector('.theme-icon');
+        if (currentTheme === 'dark-theme') {
+            themeIcon.textContent = '🌙';
+        } else if (currentTheme === 'warm-theme') {
+            themeIcon.textContent = '☀️';
+        } else {
+            themeIcon.textContent = '🌙';
+        }
+    }
+    
+    // 切换雪花效果
+    function toggleSnow() {
+        snowEnabled = !snowEnabled;
+        const snowIcon = document.querySelector('.theme-icon');
+        
+        if (snowEnabled) {
+            snowIcon.textContent = '❄️';
+            createSnowflakes();
+        } else {
+            snowIcon.textContent = '☀️';
+            // 移除所有雪花
+            const snowflakes = document.querySelectorAll('.snowflake');
+            snowflakes.forEach(snowflake => snowflake.remove());
+        }
+    }
+    
+    // 显示自定义消息弹窗
+    function showCustomMessageModal() {
+        customModal.classList.add('show');
+        messageInput.focus();
+    }
+    
+    // 关闭自定义消息弹窗
+    function closeCustomMessageModal() {
+        customModal.classList.remove('show');
+        messageInput.value = '';
+    }
+    
+    // 发送自定义消息
+    function sendCustomMessage() {
+        const messageText = messageInput.value.trim();
+        if (messageText) {
+            // 这里可以添加发送消息的逻辑
+            alert(`你的祝福已发送：${messageText}`);
+            closeCustomMessageModal();
+        } else {
+            alert('请输入祝福内容！');
+        }
+    }
+    
+    // 分享页面
+    function sharePage() {
+        if (navigator.share) {
+            navigator.share({
+                title: '冬日暖心礼物 🎁',
+                text: '一份温暖的冬日小礼物，送给你',
+                url: window.location.href
+            }).then(() => {
+                console.log('分享成功');
+            }).catch(error => {
+                console.log('分享失败:', error);
+            });
+        } else {
+            // 如果不支持Web Share API，复制链接到剪贴板
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('链接已复制到剪贴板！');
+            }).catch(error => {
+                console.log('复制失败:', error);
+                alert('请手动复制链接：' + window.location.href);
+            });
+        }
+    }
+    
+    // 生成二维码
+    function generateQRCode() {
+        const qrCodeElement = document.getElementById('qrCode');
+        if (qrCodeElement && typeof QRCode !== 'undefined') {
+            // 清空容器
+            qrCodeElement.innerHTML = '';
+            
+            // 生成真实二维码
+            QRCode.toCanvas(qrCodeElement, window.location.href, {
+                width: 120,
+                height: 120,
+                margin: 1,
+                color: {
+                    dark: '#000000',
+                    light: '#FFFFFF'
+                }
+            }, function(error) {
+                if (error) {
+                    console.error('二维码生成失败:', error);
+                    // 如果生成失败，显示备用图标
+                    qrCodeElement.innerHTML = '📱';
+                    qrCodeElement.title = '扫描二维码分享页面';
+                } else {
+                    qrCodeElement.title = '扫描二维码分享页面';
+                    qrCodeElement.style.cursor = 'pointer';
+                    
+                    // 添加点击事件保存二维码
+                    qrCodeElement.addEventListener('click', function() {
+                        const canvas = qrCodeElement.querySelector('canvas');
+                        if (canvas) {
+                            canvas.toBlob(function(blob) {
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = '冬日礼物二维码.png';
+                                a.click();
+                                URL.revokeObjectURL(url);
+                            });
+                        }
+                    });
+                }
+            });
+        } else {
+            // 如果QRCode库未加载，显示备用图标
+            qrCodeElement.innerHTML = '📱';
+            qrCodeElement.title = '扫描二维码分享页面';
+        }
+    }
+    
     // 初始化页面
     function init() {
         // 创建雪花
         createSnowflakes();
+        
+        // 生成二维码
+        generateQRCode();
         
         // 添加礼物盒点击事件
         giftBox.addEventListener('click', openGiftBox);
         
         // 添加音乐控制点击事件
         musicControl.addEventListener('click', toggleMusic);
+        
+        // 添加主题切换点击事件
+        themeToggle.addEventListener('click', toggleTheme);
+        
+        // 添加分享按钮点击事件
+        shareBtn.addEventListener('click', sharePage);
+        
+        // 添加彩花按钮点击事件
+        confettiBtn.addEventListener('click', createConfetti);
+        
+        // 添加消息按钮点击事件
+        messageBtn.addEventListener('click', showCustomMessageModal);
+        
+        // 添加发送消息按钮点击事件
+        sendMessageBtn.addEventListener('click', sendCustomMessage);
+        
+        // 添加关闭弹窗按钮点击事件
+        closeModalBtn.addEventListener('click', closeCustomMessageModal);
+        
+        // 点击弹窗外部关闭
+        customModal.addEventListener('click', function(e) {
+            if (e.target === customModal) {
+                closeCustomMessageModal();
+            }
+        });
         
         // 尝试自动播放音乐（可能会被浏览器阻止）
         document.addEventListener('touchstart', function autoplayOnFirstInteraction() {
@@ -152,13 +369,24 @@ document.addEventListener('DOMContentLoaded', function() {
             document.removeEventListener('touchstart', autoplayOnFirstInteraction);
         }, { once: true });
         
-        // 添加分享提示
-        setTimeout(() => {
-            if (navigator.share) {
-                // 如果支持Web Share API，可以在这里添加分享按钮逻辑
-                console.log("支持Web Share API");
+        // 添加键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            // 空格键切换音乐
+            if (e.code === 'Space') {
+                e.preventDefault();
+                toggleMusic();
             }
-        }, 1000);
+            // ESC键关闭弹窗
+            if (e.code === 'Escape') {
+                closeCustomMessageModal();
+            }
+        });
+        
+        // 添加页面加载完成动画
+        setTimeout(() => {
+            document.body.style.opacity = '1';
+            document.body.style.transition = 'opacity 0.5s ease';
+        }, 100);
     }
     
     // 启动初始化

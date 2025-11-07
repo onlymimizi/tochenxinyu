@@ -3,55 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>立冬小礼物 🍂</title>
+    <title>冬日暖心礼物 🎁 | 立冬特别版</title>
+    <meta name="description" content="一份温暖的冬日小礼物，包含互动惊喜和美妙音乐">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="snow-container">
-            <div class="snowflakes" aria-hidden="true">
-                <!-- 雪花将通过JavaScript动态生成 -->
-            </div>
-        </div>
+    <!-- 背景粒子效果 -->
+    <div class="particles-container" id="particles"></div>
+    
+    <!-- 雪花效果 -->
+    <div class="snow-container">
+        <div class="snowflakes" aria-hidden="true"></div>
+    </div>
 
+    <div class="container">
+        <!-- 头部区域 -->
         <header class="header">
-            <h1 class="title">立冬快乐 🍂</h1>
-            <p class="subtitle">一份温暖的冬日小礼物</p>
+            <h1 class="title">冬日暖心礼物 🎁</h1>
+            <p class="subtitle">点击礼物盒，开启冬日惊喜之旅</p>
+            <div class="decoration-stars">
+                <span class="star">⭐</span>
+                <span class="star">✨</span>
+                <span class="star">🌟</span>
+            </div>
         </header>
 
+        <!-- 主要内容区域 -->
         <main class="content">
+            <!-- 礼物盒区域 -->
             <div class="gift-container">
                 <div class="gift-box" id="giftBox">
                     <div class="gift-lid"></div>
                     <div class="gift-body">
                         <div class="gift-ribbon"></div>
+                        <div class="gift-sparkle"></div>
                     </div>
                 </div>
+                
+                <!-- 祝福消息 -->
                 <div class="message" id="message">
                     <p class="greeting">温暖过冬，幸福满满</p>
                     <p class="wishes">愿你的冬日充满阳光和温暖❤️</p>
                     <div class="heart-container">
                         <div class="heart"></div>
                     </div>
+                    
+                    <!-- 额外互动元素 -->
+                    <div class="extra-interactions">
+                        <button class="confetti-btn" id="confettiBtn">🎉 撒花庆祝</button>
+                        <button class="message-btn" id="messageBtn">💌 写祝福</button>
+                    </div>
                 </div>
             </div>
 
+            <!-- 交互提示 -->
             <div class="interaction-hint">
-                <p>点击礼物盒打开惊喜 ✨</p>
+                <p>✨ 点击礼物盒打开惊喜 ✨</p>
+            </div>
+            
+            <!-- 进度指示器 -->
+            <div class="progress-indicator" id="progressIndicator">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <span class="progress-text">加载中...</span>
             </div>
         </main>
 
+        <!-- 底部控制区域 -->
         <footer class="footer">
-            <div class="music-control" id="musicControl">
-                <span class="music-icon">🎵</span>
-                <span class="music-text">音乐</span>
+            <div class="control-panel">
+                <div class="music-control" id="musicControl">
+                    <span class="music-icon">🎵</span>
+                    <span class="music-text">播放音乐</span>
+                    <span class="music-title">《非酋》- 薛明媛/朱贺</span>
+                </div>
+                
+                <div class="theme-toggle" id="themeToggle">
+                    <span class="theme-icon">🌙</span>
+                    <span class="theme-text">切换主题</span>
+                </div>
+                
+                <div class="share-btn" id="shareBtn">
+                    <span class="share-icon">📤</span>
+                    <span class="share-text">分享</span>
+                </div>
             </div>
-            <p class="from">来自朋友的冬日祝福</p>
+            
+            <p class="from">来自朋友的冬日祝福 ❄️</p>
+            
+            <!-- 二维码区域 -->
+            <div class="qr-section">
+                <div class="qr-container" id="qrContainer">
+                    <p>扫描二维码分享给朋友</p>
+                    <div class="qr-code" id="qrCode"></div>
+                </div>
+            </div>
         </footer>
     </div>
 
-    <!-- 音频功能已移除，避免微信拦截 -->
+    <!-- 自定义消息弹窗 -->
+    <div class="custom-modal" id="customModal">
+        <div class="modal-content">
+            <h3>写下你的祝福 💝</h3>
+            <textarea id="messageInput" placeholder="输入你想说的话..."></textarea>
+            <div class="modal-buttons">
+                <button id="sendMessage">发送祝福</button>
+                <button id="closeModal">取消</button>
+            </div>
+        </div>
+    </div>
 
+    <!-- 背景音乐 -->
+    <audio id="bgMusic" loop>
+        <source src="https://music.163.com/song/media/outer/url?id=1330348068.mp3" type="audio/mpeg">
+        <source src="https://freetyst.ml/music/1330348068.mp3" type="audio/mpeg">
+        您的浏览器不支持音频元素。
+    </audio>
+
+    <!-- 音效 -->
+    <audio id="clickSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="confettiSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
